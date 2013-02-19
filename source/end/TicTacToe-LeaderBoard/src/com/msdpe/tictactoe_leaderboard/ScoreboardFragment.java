@@ -5,6 +5,7 @@ import java.util.List;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.TableQueryCallback;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 public class ScoreboardFragment extends Fragment {
 	
 	private ListView lvLeaderboard;
+	private PlayerRecordAdapter mAdapter;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -32,6 +34,12 @@ public class ScoreboardFragment extends Fragment {
 		lvLeaderboard = (ListView) this.getView().findViewById(R.id.lvLeaderboard);
 		View headerView = this.getActivity().getLayoutInflater().inflate(R.layout.leaderboard_header, null);
 		lvLeaderboard.addHeaderView(headerView);
+		
+		
+		mAdapter = new PlayerRecordAdapter(getActivity(), R.layout.row_list_player_record);
+		//ListView listViewToDo = (ListView) findViewById(R.id.listViewToDo);
+		//listViewToDo.setAdapter(mAdapter);
+		lvLeaderboard.setAdapter(mAdapter);
 		
 		refreshPlayerRecords();
 		
@@ -56,9 +64,23 @@ public class ScoreboardFragment extends Fragment {
 					Exception exception, ServiceFilterResponse response) {
 				// TODO Auto-generated method stub
 				
-				lvLeaderboard.setAdapter(new ArrayAdapter<PlayerRecord>(getActivity(),
-				        android.R.layout.simple_list_item_single_choice,
-				        android.R.id.text1, results));
+//				lvLeaderboard.setAdapter(new ArrayAdapter<PlayerRecord>(getActivity(),
+//				        android.R.layout.simple_list_item_single_choice,
+//				        android.R.id.text1, results));
+				
+				if (exception == null) {
+					mAdapter.clear();
+
+					for (PlayerRecord item : results) {
+						mAdapter.add(item);
+					}
+
+				} else {
+					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+					builder.setMessage(exception.getMessage());
+					builder.setTitle("Error");
+					builder.create().show();
+				}
 			}
 		});
 	}
