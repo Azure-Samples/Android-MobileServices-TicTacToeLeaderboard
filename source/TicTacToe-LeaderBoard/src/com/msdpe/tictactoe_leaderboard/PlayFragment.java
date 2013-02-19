@@ -132,8 +132,7 @@ public class PlayFragment extends Fragment {
 					@Override
 					public void onClick(View v) {
 						//Log.i(TAG, (String) v.getTag());
-						Button btn = (Button) v;
-						btn.setText("X");
+						processPlayerButtonTap((Button) v);
 					}
 				});
 				params = new RelativeLayout.LayoutParams(xpos - buttonMin, ypos - buttonMin);
@@ -205,6 +204,12 @@ public class PlayFragment extends Fragment {
 		
 		//check for game over
 		
+		switchCurrentCharacterAndTurn();
+		
+		lblInfo.setText(getActivity().getString(R.string.your_turn));
+	}
+
+	private void switchCurrentCharacterAndTurn() {
 		if (currentCharacter.equals("X")) {
 			currentCharacter = "O";
 		} else {
@@ -212,7 +217,22 @@ public class PlayFragment extends Fragment {
 		}
 		playersTurn = !playersTurn;
 		computersTurn = !computersTurn;
-		lblInfo.setText(getActivity().getString(R.string.your_turn));
+	}
+	
+	private void processPlayerButtonTap(Button tappedButton) {
+		if (!gameOver && playersTurn) {
+			if (tappedButton.getText().toString().equals("")) {
+				tappedButton.setText(currentCharacter);
+				spotsRemaining--;
+				
+				//check for game over
+				
+				switchCurrentCharacterAndTurn();
+				
+				if (computersTurn)
+					playComputersTurn();
+			}
+		}
 	}
 	
 	private class DemoView extends View {
