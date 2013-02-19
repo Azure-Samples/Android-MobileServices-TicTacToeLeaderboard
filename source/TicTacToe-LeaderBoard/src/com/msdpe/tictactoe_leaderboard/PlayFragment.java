@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Display;
@@ -38,6 +40,7 @@ public class PlayFragment extends Fragment {
 	private boolean gameOver = false;
 	private String currentCharacter = "X";
 	private int spotsRemaining = 9;
+	private String winningCharacter = "";
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,6 +66,7 @@ public class PlayFragment extends Fragment {
 			gameOver = savedInstanceState.getBoolean("gameOver");
 			currentCharacter = savedInstanceState.getString("currentCharacter");
 			spotsRemaining = savedInstanceState.getInt("spotsRemaining");
+			winningCharacter = savedInstanceState.getString("winningCharacter");
 		}
 		
 		
@@ -184,6 +188,7 @@ public class PlayFragment extends Fragment {
 		outState.putBoolean("gameOver", gameOver);
 		outState.putString("currentCharacter", currentCharacter);
 		outState.putInt("spotsRemaining", spotsRemaining);
+		outState.putString("winningCharacter", winningCharacter);
 	}
 	
 	private void playComputersTurn() {
@@ -202,7 +207,10 @@ public class PlayFragment extends Fragment {
 		
 		spotsRemaining--;
 		
-		//check for game over
+		if (isGameOver() || spotsRemaining == 0) {
+			handleGameOver();
+			return;
+		}
 		
 		switchCurrentCharacterAndTurn();
 		
@@ -219,19 +227,96 @@ public class PlayFragment extends Fragment {
 		computersTurn = !computersTurn;
 	}
 	
+	private void printBoard() {
+		String board = "";
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				if (buttonMatrix[j][i].getText().toString().equals(""))
+					board += "$";
+				else
+					board += buttonMatrix[j][i].getText().toString();
+			}
+		}
+		Log.e(TAG, "Board----" + board);
+	}
+	
 	private void processPlayerButtonTap(Button tappedButton) {
+		Log.e(TAG, "Player tapped - " + tappedButton.getTag());
+		
 		if (!gameOver && playersTurn) {
 			if (tappedButton.getText().toString().equals("")) {
 				tappedButton.setText(currentCharacter);
 				spotsRemaining--;
+				//printBoard();
 				
-				//check for game over
+				
+				if (isGameOver() || spotsRemaining == 0) {
+					handleGameOver();
+					return;
+				}
 				
 				switchCurrentCharacterAndTurn();
 				
 				if (computersTurn)
 					playComputersTurn();
 			}
+		}
+	}
+	
+	private boolean isGameOver() {
+		//At least 5 spots must be filled to win a game
+		if (spotsRemaining > 4)
+			return false;
+		
+		printBoard();
+		for (int i = 0; i < 3; i++) {
+			//Check vertical lines, then horizontal lines
+			if (buttonMatrix[i][0].getText().toString().equals(buttonMatrix[i][1].getText().toString()) &&
+					buttonMatrix[i][0].getText().toString().equals(buttonMatrix[i][2].getText().toString()) &&
+					!buttonMatrix[i][0].getText().toString().equals("")) {			
+				winningCharacter = buttonMatrix[i][0].getText().toString();
+				Log.i(TAG, "Win - "+ winningCharacter);
+				return true;
+			} else if (buttonMatrix[0][i].getText().toString().equals(buttonMatrix[1][i].getText().toString()) && 
+					buttonMatrix[0][i].getText().toString().equals(buttonMatrix[2][i].getText().toString()) &&
+					!buttonMatrix[0][i].getText().toString().equals("")) {								
+				winningCharacter = buttonMatrix[0][i].getText().toString();
+				Log.i(TAG, "Win - "+ winningCharacter);
+				return true;
+			}
+		}
+		//Check top left to bottom right then top right to bottom left
+		if (buttonMatrix[0][0].getText().toString().equals(buttonMatrix[1][1].getText().toString()) &&
+				buttonMatrix[0][0].getText().toString().equals(buttonMatrix[2][2].getText().toString()) &&
+				!buttonMatrix[0][0].getText().toString().equals("")) {			
+			winningCharacter = buttonMatrix[0][0].getText().toString();
+			Log.i(TAG, "Win - "+ winningCharacter);
+			return true;
+		} else if (buttonMatrix[2][0].getText().toString().equals(buttonMatrix[1][1].getText().toString()) &&
+				buttonMatrix[2][0].getText().toString().equals(buttonMatrix[0][2].getText().toString()) &&
+				!buttonMatrix[2][0].getText().toString().equals("")) {
+			winningCharacter = buttonMatrix[2][0].getText().toString();
+			Log.i(TAG, "Win - "+ winningCharacter);
+			return true;
+		}		
+		return false;
+	}
+	
+	private void handleGameOver() {
+		gameOver = true;
+		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+		String username = prefs.getString("Username", "Player 1");
+		
+		if (winningCharacter.equals("")) {			
+			//save tie
+			lblInfo.setText("You've tied!");
+		} else if (winningCharacter.equals(playersCharacter)) {
+			//save player win
+			lblInfo.setText("You WIN!");
+		} else {
+			//save player loss
+			lblInfo.setText("You LOSE!");
 		}
 	}
 	
