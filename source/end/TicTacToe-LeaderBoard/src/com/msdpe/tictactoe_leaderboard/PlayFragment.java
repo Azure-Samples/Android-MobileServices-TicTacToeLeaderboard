@@ -126,7 +126,7 @@ public class PlayFragment extends Fragment {
 			}
 		}
 		if (gameOver) {
-			lblInfo.setText(this.getActivity().getString(R.id.play_again));
+			lblInfo.setText(this.getActivity().getString(R.string.play_again));
 		} else {
 			if (computersTurn) {
 				lblInfo.setText(this.getActivity().getString(R.string.computers_turn));
