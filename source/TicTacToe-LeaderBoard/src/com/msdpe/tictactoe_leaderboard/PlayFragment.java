@@ -78,12 +78,7 @@ public class PlayFragment extends Fragment {
 		
 		lblInfo = (TextView) this.getView().findViewById(R.id.lblInfo);		
 		
-		if (computersTurn) {
-			lblInfo.setText(this.getActivity().getString(R.string.computers_turn));
-			this.playComputersTurn();
-		} else {
-			lblInfo.setText(this.getActivity().getString(R.string.your_turn));
-		}
+		
 		
 		LinearLayout layoutRoot = (LinearLayout) this.getView().findViewById(R.id.layoutRoot);
 		RelativeLayout relLayout = new RelativeLayout(getActivity());
@@ -159,6 +154,14 @@ public class PlayFragment extends Fragment {
 //		params.leftMargin = marginMin + xpos * 2;
 //		params.topMargin = marginMin;
 //		relLayout.addView(btn, params);
+		
+		
+		if (computersTurn) {
+			lblInfo.setText(this.getActivity().getString(R.string.computers_turn));
+			this.playComputersTurn();
+		} else {
+			lblInfo.setText(this.getActivity().getString(R.string.your_turn));
+		}
 	}
 	
 	
@@ -185,7 +188,31 @@ public class PlayFragment extends Fragment {
 	}
 	
 	private void playComputersTurn() {
+		for (int i = 2; i >= 0; i--) {
+			for (int j = 2; j >= 0; j--) {
+				if (buttonMatrix[i][j].getText().toString().equals("")) {
+					this.computerPicksSpot(buttonMatrix[i][j]);
+					return;//
+				}
+			}
+		}
+	}
+	
+	private void computerPicksSpot(Button pickedButton) {
+		pickedButton.setText(currentCharacter);
 		
+		spotsRemaining--;
+		
+		//check for game over
+		
+		if (currentCharacter.equals("X")) {
+			currentCharacter = "O";
+		} else {
+			currentCharacter = "X";
+		}
+		playersTurn = !playersTurn;
+		computersTurn = !computersTurn;
+		lblInfo.setText(getActivity().getString(R.string.your_turn));
 	}
 	
 	private class DemoView extends View {
