@@ -1,0 +1,6 @@
+function read(query, user, request) {
+
+    query.orderByDescending('wins', 'ties');
+    request.execute();
+
+}

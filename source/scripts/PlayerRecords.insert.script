@@ -1,0 +1,42 @@
+function insert(item, user, request) {
+    var playerRecordsTable = tables.getTable('PlayerRecords');
+    playerRecordsTable
+        .where({ playerName: item.playerName })
+        .read({ success: updateOrInsertRecord });
+
+    function updateOrInsertRecord(existingRecord) {
+        if (existingRecord.length > 0) {        
+            if (item.status == "win")
+                existingRecord[0].wins++;
+            else if (item.status == "loss")
+                existingRecord[0].losses++;
+            else if (item.status == "tie")
+                existingRecord[0].ties++;
+            playerRecordsTable.update(existingRecord[0]);
+            request.respond(200, existingRecord[0]);
+        } else {
+            if (item.status == "win") {
+                item = { playerName : item.playerName};
+                item.wins = 1;
+                item.losses = 0;
+                item.ties = 0;
+            }  else if (item.status == "loss"){
+                item = { playerName : item.playerName};
+                item.wins = 0;
+                item.losses = 1;
+                item.ties = 0;
+            }
+            else if (item.status == "tie") {
+                item = { playerName : item.playerName};
+                item.wins = 0;
+                item.losses = 0;
+                item.ties = 1;
+            }
+            //item.status = null;
+            //request.execute();
+            console.log("Inserting: ",item);
+            playerRecordsTable.insert(item);
+            request.respond(201, item);
+        }
+    }
+}
