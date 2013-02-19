@@ -1,6 +1,5 @@
 package com.msdpe.tictactoe_leaderboard;
 
-
 public class PlayerRecord {
 	@com.google.gson.annotations.SerializedName("ties")
 	private int mTies;
@@ -22,6 +21,11 @@ public class PlayerRecord {
 
 	public PlayerRecord() {
 
+	}
+	
+	public PlayerRecord(String playerName, String status) {
+		mPlayerName = playerName;
+		mStatus = status;
 	}
 
 	@Override

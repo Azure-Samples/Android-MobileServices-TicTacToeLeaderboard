@@ -21,4 +21,5 @@
 	<string name="wins">Wins</string>
 	<string name="losses">Losses</string>
 	<string name="ties">Ties</string>
+	<string name="play_again">Hit back to play again</string>
 </resources>

@@ -3,6 +3,10 @@ package com.msdpe.tictactoe_leaderboard;
 import java.util.ArrayList;
 import java.util.Random;
 
+import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+import com.microsoft.windowsazure.mobileservices.TableOperationCallback;
+
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
@@ -23,6 +27,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class PlayFragment extends Fragment {
 	
@@ -120,12 +125,15 @@ public class PlayFragment extends Fragment {
 				buttonMatrix[i][j] = btn;				
 			}
 		}
-			
-		if (computersTurn) {
-			lblInfo.setText(this.getActivity().getString(R.string.computers_turn));
-			this.playComputersTurn();
+		if (gameOver) {
+			lblInfo.setText(this.getActivity().getString(R.id.play_again));
 		} else {
-			lblInfo.setText(this.getActivity().getString(R.string.your_turn));
+			if (computersTurn) {
+				lblInfo.setText(this.getActivity().getString(R.string.computers_turn));
+				this.playComputersTurn();
+			} else {
+				lblInfo.setText(this.getActivity().getString(R.string.your_turn));
+			}
 		}
 	}	
 	
@@ -264,17 +272,42 @@ public class PlayFragment extends Fragment {
 		String username = prefs.getString("Username", "Player 1");
 		
 		TicTacToeApplication myApp = (TicTacToeApplication) getActivity().getApplication();
+		TicTacToeService tttService = myApp.getTicTacToeService();
+		
+		PlayerRecord newPR = null;
 		
 		if (winningCharacter.equals("")) {			
 			//save tie
 			lblInfo.setText("You've tied!");
+			newPR = new PlayerRecord(username, "tie");
 		} else if (winningCharacter.equals(playersCharacter)) {
 			//save player win
 			lblInfo.setText("You WIN!");
+			newPR = new PlayerRecord(username, "win");
+			
 		} else {
 			//save player loss
 			lblInfo.setText("You LOSE!");
+			newPR = new PlayerRecord(username, "loss");
+			
 		}
+		
+		tttService.insertPlayerRecord(newPR, new TableOperationCallback<PlayerRecord>() {				
+			@Override
+			public void onCompleted(PlayerRecord entity, Exception exception,
+					ServiceFilterResponse response) {
+					
+				if (exception != null) {
+					Log.e(TAG, exception.getMessage());
+					exception.printStackTrace();
+					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+					builder.setMessage(exception.getMessage());
+					builder.setTitle("Error");
+					builder.create().show();
+					return;
+				}
+			}
+		});
 	}
 	
 	private class BoardView extends View {
