@@ -71,6 +71,7 @@ public class PlayScoreActivity extends FragmentActivity implements
 			getActionBar().setSelectedNavigationItem(
 					savedInstanceState.getInt(STATE_SELECTED_NAVIGATION_ITEM));
 		}
+		//Restore the fragment as well
 		super.onRestoreInstanceState(savedInstanceState);
 	}
 //
@@ -79,6 +80,7 @@ public class PlayScoreActivity extends FragmentActivity implements
 		// Serialize the current dropdown position.
 		outState.putInt(STATE_SELECTED_NAVIGATION_ITEM, getActionBar()
 				.getSelectedNavigationIndex());
+		//Save the fragment as well
 		super.onSaveInstanceState(outState);
 		outState.putBoolean("shouldSkipReload", this.shouldSkipReload);		
 	}
@@ -98,7 +100,7 @@ public class PlayScoreActivity extends FragmentActivity implements
 			shouldSkipReload = false;
 			return true;
 		}
-		Fragment fragment = new DummySectionFragment();
+		Fragment fragment;//
 		
 		
 		
@@ -108,12 +110,8 @@ public class PlayScoreActivity extends FragmentActivity implements
 		} else if (position == 1) {
 			Log.w("PlayScoreActivity", "ScoreboardScoreboard");
 			fragment = new ScoreboardFragment();
-		}
-		
-//		Fragment fragment = new DummySectionFragment();
-//		Bundle args = new Bundle();
-//		args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
-//		fragment.setArguments(args);
+		} else
+			return true;
 		getSupportFragmentManager().beginTransaction()
 				.replace(R.id.container, fragment).commit();
 		return true;
@@ -122,32 +120,4 @@ public class PlayScoreActivity extends FragmentActivity implements
 	public void setCancelReload(boolean shouldSkipReload) {
 		this.shouldSkipReload= shouldSkipReload;
 	}
-	
-	/**
-	 * A dummy fragment representing a section of the app, but that simply
-	 * displays dummy text.
-	 */
-	public static class DummySectionFragment extends Fragment {
-		/**
-		 * The fragment argument representing the section number for this
-		 * fragment.
-		 */
-		public static final String ARG_SECTION_NUMBER = "section_number";
-
-		public DummySectionFragment() {
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			// Create a new TextView and set its text to the fragment's section
-			// number argument value.
-			TextView textView = new TextView(getActivity());
-			textView.setGravity(Gravity.CENTER);
-			textView.setText(Integer.toString(getArguments().getInt(
-					ARG_SECTION_NUMBER)));
-			return textView;
-		}
-	}
-
 }

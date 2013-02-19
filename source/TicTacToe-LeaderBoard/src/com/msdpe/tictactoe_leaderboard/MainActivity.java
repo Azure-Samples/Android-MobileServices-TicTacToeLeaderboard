@@ -28,22 +28,20 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				//Validate the text box
+				//Validate the player's name
 				if (txtName.getText().toString().matches("")) {
-					//txtName.setBackgroundColor(getResources().getColor(R.color.red));
 					txtName.setError("Please enter a name");
 					return;
 				} else {
-					//txtName.setBackgroundColor(getResources().getColor(R.color.white));
 					txtName.setError(null);
 					
+					//Save player's name to preferences
 					SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 					SharedPreferences.Editor prefsEditor = prefs.edit();
 					prefsEditor.putString("Username", txtName.getText().toString());
 					prefsEditor.commit();
 					
 					Intent intent = new Intent(getApplicationContext(), PlayScoreActivity.class);
-			        //intent.putExtra("MyStringValue", editText1.getText().toString());
 			        startActivity(intent);
 					
 				}
