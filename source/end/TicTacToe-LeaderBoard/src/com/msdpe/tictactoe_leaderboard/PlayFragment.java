@@ -263,6 +263,8 @@ public class PlayFragment extends Fragment {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
 		String username = prefs.getString("Username", "Player 1");
 		
+		TicTacToeApplication myApp = (TicTacToeApplication) getActivity().getApplication();
+		
 		if (winningCharacter.equals("")) {			
 			//save tie
 			lblInfo.setText("You've tied!");
