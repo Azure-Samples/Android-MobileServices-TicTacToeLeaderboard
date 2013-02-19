@@ -1,5 +1,7 @@
 package com.msdpe.tictactoe_leaderboard;
 
+import static com.microsoft.windowsazure.mobileservices.MobileServiceQueryOperations.val;
+
 import java.net.MalformedURLException;
 
 import android.app.Application;
@@ -29,6 +31,8 @@ public class TicTacToeService {
 		mPlayerRecordsTable.insert(playerRecord, callback);
 	}
 	
-	
-	
+	public void getPlayerRecords(TableQueryCallback<PlayerRecord> callback) {
+		mPlayerRecordsTable.where().execute(callback); 
+	}
+
 }
