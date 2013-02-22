@@ -37,20 +37,8 @@ public class ScoreboardFragment extends Fragment {
 		
 		
 		mAdapter = new PlayerRecordAdapter(getActivity(), R.layout.row_list_player_record);
-		//ListView listViewToDo = (ListView) findViewById(R.id.listViewToDo);
-		//listViewToDo.setAdapter(mAdapter);
-		lvLeaderboard.setAdapter(mAdapter);
-		
+		lvLeaderboard.setAdapter(mAdapter);		
 		refreshPlayerRecords();
-		
-		//Static array of names for now
-//		String[] names = new String[] { "Player One", "Player 2", "Player 3", "Player 4",
-//		        "Player 5", "Player 6", "Player 7", "Player 8", "Player 9", "Player 10",
-//		        "Player 11", "Player 12", "Player 13", "Player 14", "Player 15", "Player 16" };
-//		
-//		lvLeaderboard.setAdapter(new ArrayAdapter<String>(this.getActivity(),
-//		        android.R.layout.simple_list_item_single_choice,
-//		        android.R.id.text1, names));
 	}
 	
 	private void refreshPlayerRecords() {
@@ -62,11 +50,6 @@ public class ScoreboardFragment extends Fragment {
 			@Override
 			public void onCompleted(List<PlayerRecord> results, int count,
 					Exception exception, ServiceFilterResponse response) {
-				// TODO Auto-generated method stub
-				
-//				lvLeaderboard.setAdapter(new ArrayAdapter<PlayerRecord>(getActivity(),
-//				        android.R.layout.simple_list_item_single_choice,
-//				        android.R.id.text1, results));
 				
 				if (exception == null) {
 					mAdapter.clear();

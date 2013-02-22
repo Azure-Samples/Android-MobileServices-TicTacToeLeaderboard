@@ -26,21 +26,21 @@ import android.widget.TextView;
 
 public class PlayFragment extends Fragment {
 	
-	private String TAG = "PlayFragment";
-	private TextView lblInfo;
-	private int width = 0;
-	private int height = 0;
-	private int pass = 0;
-	private int xpos = 0;
-	private int ypos = 0;
-	private Button[][] buttonMatrix = new Button[3][3];
-	private boolean playersTurn = false;
-	private boolean computersTurn = false;
-	private boolean gameOver = false;
-	private String playersCharacter = "";
-	private String winningCharacter = "";
-	private String currentCharacter = "X";
-	private int spotsRemaining = 9;	
+	private final String TAG = "PlayFragment";
+	private TextView mLblInfo;
+	private int mWidth = 0;
+	private int mHeight = 0;
+	private int mPass = 0;
+	private int mXPos = 0;
+	private int mYPos = 0;
+	private Button[][] mButtonMatrix = new Button[3][3];
+	private boolean mPlayersTurn = false;
+	private boolean mComputersTurn = false;
+	private boolean mGameOver = false;
+	private String mPlayersCharacter = "";
+	private String mWinningCharacter = "";
+	private String mCurrentCharacter = "X";
+	private int mSpotsRemaining = 9;	
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -51,22 +51,22 @@ public class PlayFragment extends Fragment {
 			Log.e(TAG, "New play");
 			Random whoseFirst = new Random();
 			if (whoseFirst.nextInt(2) == 0) {
-				playersTurn = false;
-				computersTurn = true;
-				playersCharacter = "O";
+				mPlayersTurn = false;
+				mComputersTurn = true;
+				mPlayersCharacter = "O";
 			} else {
-				playersTurn = true;
-				computersTurn = false;
-				playersCharacter = "X";
+				mPlayersTurn = true;
+				mComputersTurn = false;
+				mPlayersCharacter = "X";
 			}
 		} else {
-			playersTurn = savedInstanceState.getBoolean("playersTurn");
-			computersTurn = savedInstanceState.getBoolean("computersTurn");
-			playersCharacter = savedInstanceState.getString("playersCharacter");
-			gameOver = savedInstanceState.getBoolean("gameOver");
-			currentCharacter = savedInstanceState.getString("currentCharacter");
-			spotsRemaining = savedInstanceState.getInt("spotsRemaining");
-			winningCharacter = savedInstanceState.getString("winningCharacter");
+			mPlayersTurn = savedInstanceState.getBoolean("playersTurn");
+			mComputersTurn = savedInstanceState.getBoolean("computersTurn");
+			mPlayersCharacter = savedInstanceState.getString("playersCharacter");
+			mGameOver = savedInstanceState.getBoolean("gameOver");
+			mCurrentCharacter = savedInstanceState.getString("currentCharacter");
+			mSpotsRemaining = savedInstanceState.getInt("spotsRemaining");
+			mWinningCharacter = savedInstanceState.getString("winningCharacter");
 		}
 				
 		View view =  inflater.inflate(R.layout.fragment_play, container, false);
@@ -78,18 +78,18 @@ public class PlayFragment extends Fragment {
 		super.onActivityCreated(savedInstanceState);
 		Log.i(TAG, "SavedInstanceState is " + (savedInstanceState == null ? "null" : "not null"));
 		
-		lblInfo = (TextView) this.getView().findViewById(R.id.lblInfo);				
+		mLblInfo = (TextView) this.getView().findViewById(R.id.lblInfo);				
 		LinearLayout layoutRoot = (LinearLayout) this.getView().findViewById(R.id.layoutRoot);
 		RelativeLayout relLayout = new RelativeLayout(getActivity());
 		relLayout.addView(new BoardView(getActivity()));
 		layoutRoot.addView(relLayout);
 		
 		Display display = getActivity().getWindowManager().getDefaultDisplay();
-        width = display.getWidth();
-        height = display.getHeight();
+        mWidth = display.getWidth();
+        mHeight = display.getHeight();
       
-        xpos = width / 3;
-        ypos = height/3 - (height / 12);
+        mXPos = mWidth / 3;
+        mYPos = mHeight/3 - (mHeight / 12);
 
         int buttonMin = 40;
 		int marginMin = 20;		
@@ -109,23 +109,23 @@ public class PlayFragment extends Fragment {
 						processPlayerButtonTap((Button) v);
 					}
 				});
-				params = new RelativeLayout.LayoutParams(xpos - buttonMin, ypos - buttonMin);
-				params.leftMargin = marginMin + xpos * i;
-				params.topMargin = marginMin + ypos * j;
+				params = new RelativeLayout.LayoutParams(mXPos - buttonMin, mYPos - buttonMin);
+				params.leftMargin = marginMin + mXPos * i;
+				params.topMargin = marginMin + mYPos * j;
 				if (savedInstanceState != null) {
 					btn.setText(savedInstanceState.getString("" + (i * 3 + j)));
 				}
 				relLayout.addView(btn, params);
 				
-				buttonMatrix[i][j] = btn;				
+				mButtonMatrix[i][j] = btn;				
 			}
 		}
 			
-		if (computersTurn) {
-			lblInfo.setText(this.getActivity().getString(R.string.computers_turn));
+		if (mComputersTurn) {
+			mLblInfo.setText(this.getActivity().getString(R.string.computers_turn));
 			this.playComputersTurn();
 		} else {
-			lblInfo.setText(this.getActivity().getString(R.string.your_turn));
+			mLblInfo.setText(this.getActivity().getString(R.string.your_turn));
 		}
 	}	
 	
@@ -134,27 +134,27 @@ public class PlayFragment extends Fragment {
 		Log.i(TAG, "onSaveInstanceState");	
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
-				outState.putString("" + (i * 3 + j), buttonMatrix[i][j].getText().toString());
+				outState.putString("" + (i * 3 + j), mButtonMatrix[i][j].getText().toString());
 			}
 		}
 		super.onSaveInstanceState(outState);
 		PlayScoreActivity psa = (PlayScoreActivity) getActivity();
 		psa.setCancelReload(true);
 		
-		outState.putBoolean("playersTurn", playersTurn);
-		outState.putBoolean("computersTurn", computersTurn);
-		outState.putString("playersCharacter", playersCharacter);
-		outState.putBoolean("gameOver", gameOver);
-		outState.putString("currentCharacter", currentCharacter);
-		outState.putInt("spotsRemaining", spotsRemaining);
-		outState.putString("winningCharacter", winningCharacter);
+		outState.putBoolean("playersTurn", mPlayersTurn);
+		outState.putBoolean("computersTurn", mComputersTurn);
+		outState.putString("playersCharacter", mPlayersCharacter);
+		outState.putBoolean("gameOver", mGameOver);
+		outState.putString("currentCharacter", mCurrentCharacter);
+		outState.putInt("spotsRemaining", mSpotsRemaining);
+		outState.putString("winningCharacter", mWinningCharacter);
 	}
 	
 	private void playComputersTurn() {
 		for (int i = 2; i >= 0; i--) {
 			for (int j = 2; j >= 0; j--) {
-				if (buttonMatrix[i][j].getText().toString().equals("")) {
-					this.computerPicksSpot(buttonMatrix[i][j]);
+				if (mButtonMatrix[i][j].getText().toString().equals("")) {
+					this.computerPicksSpot(mButtonMatrix[i][j]);
 					return;//
 				}
 			}
@@ -162,36 +162,35 @@ public class PlayFragment extends Fragment {
 	}
 	
 	private void computerPicksSpot(Button pickedButton) {
-		pickedButton.setText(currentCharacter);		
-		spotsRemaining--;
+		pickedButton.setText(mCurrentCharacter);		
+		mSpotsRemaining--;
 		
-		if (isGameOver() || spotsRemaining == 0) {
+		if (isGameOver() || mSpotsRemaining == 0) {
 			handleGameOver();
 			return;
-		}
-		
+		}		
 		switchCurrentCharacterAndTurn();		
-		lblInfo.setText(getActivity().getString(R.string.your_turn));
+		mLblInfo.setText(getActivity().getString(R.string.your_turn));
 	}
 
 	private void switchCurrentCharacterAndTurn() {
-		if (currentCharacter.equals("X")) {
-			currentCharacter = "O";
+		if (mCurrentCharacter.equals("X")) {
+			mCurrentCharacter = "O";
 		} else {
-			currentCharacter = "X";
+			mCurrentCharacter = "X";
 		}
-		playersTurn = !playersTurn;
-		computersTurn = !computersTurn;
+		mPlayersTurn = !mPlayersTurn;
+		mComputersTurn = !mComputersTurn;
 	}
 	
 	private void printBoard() {
 		String board = "";
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
-				if (buttonMatrix[j][i].getText().toString().equals(""))
+				if (mButtonMatrix[j][i].getText().toString().equals(""))
 					board += "$";
 				else
-					board += buttonMatrix[j][i].getText().toString();
+					board += mButtonMatrix[j][i].getText().toString();
 			}
 		}
 		Log.e(TAG, "Board----" + board);
@@ -200,19 +199,19 @@ public class PlayFragment extends Fragment {
 	private void processPlayerButtonTap(Button tappedButton) {
 		Log.e(TAG, "Player tapped - " + tappedButton.getTag());
 		
-		if (!gameOver && playersTurn) {
+		if (!mGameOver && mPlayersTurn) {
 			if (tappedButton.getText().toString().equals("")) {
-				tappedButton.setText(currentCharacter);
-				spotsRemaining--;
+				tappedButton.setText(mCurrentCharacter);
+				mSpotsRemaining--;
 				
-				if (isGameOver() || spotsRemaining == 0) {
+				if (isGameOver() || mSpotsRemaining == 0) {
 					handleGameOver();
 					return;
 				}
 				
 				switchCurrentCharacterAndTurn();
 				
-				if (computersTurn)
+				if (mComputersTurn)
 					playComputersTurn();
 			}
 		}
@@ -220,58 +219,58 @@ public class PlayFragment extends Fragment {
 	
 	private boolean isGameOver() {
 		//At least 5 spots must be filled to win a game
-		if (spotsRemaining > 4)
+		if (mSpotsRemaining > 4)
 			return false;
 		
 		printBoard();
 		for (int i = 0; i < 3; i++) {
 			//Check vertical lines, then horizontal lines
-			if (buttonMatrix[i][0].getText().toString().equals(buttonMatrix[i][1].getText().toString()) &&
-					buttonMatrix[i][0].getText().toString().equals(buttonMatrix[i][2].getText().toString()) &&
-					!buttonMatrix[i][0].getText().toString().equals("")) {			
-				winningCharacter = buttonMatrix[i][0].getText().toString();
-				Log.i(TAG, "Win - "+ winningCharacter);
+			if (mButtonMatrix[i][0].getText().toString().equals(mButtonMatrix[i][1].getText().toString()) &&
+					mButtonMatrix[i][0].getText().toString().equals(mButtonMatrix[i][2].getText().toString()) &&
+					!mButtonMatrix[i][0].getText().toString().equals("")) {			
+				mWinningCharacter = mButtonMatrix[i][0].getText().toString();
+				Log.i(TAG, "Win - "+ mWinningCharacter);
 				return true;
-			} else if (buttonMatrix[0][i].getText().toString().equals(buttonMatrix[1][i].getText().toString()) && 
-					buttonMatrix[0][i].getText().toString().equals(buttonMatrix[2][i].getText().toString()) &&
-					!buttonMatrix[0][i].getText().toString().equals("")) {								
-				winningCharacter = buttonMatrix[0][i].getText().toString();
-				Log.i(TAG, "Win - "+ winningCharacter);
+			} else if (mButtonMatrix[0][i].getText().toString().equals(mButtonMatrix[1][i].getText().toString()) && 
+					mButtonMatrix[0][i].getText().toString().equals(mButtonMatrix[2][i].getText().toString()) &&
+					!mButtonMatrix[0][i].getText().toString().equals("")) {								
+				mWinningCharacter = mButtonMatrix[0][i].getText().toString();
+				Log.i(TAG, "Win - "+ mWinningCharacter);
 				return true;
 			}
 		}
 		//Check top left to bottom right then top right to bottom left
-		if (buttonMatrix[0][0].getText().toString().equals(buttonMatrix[1][1].getText().toString()) &&
-				buttonMatrix[0][0].getText().toString().equals(buttonMatrix[2][2].getText().toString()) &&
-				!buttonMatrix[0][0].getText().toString().equals("")) {			
-			winningCharacter = buttonMatrix[0][0].getText().toString();
-			Log.i(TAG, "Win - "+ winningCharacter);
+		if (mButtonMatrix[0][0].getText().toString().equals(mButtonMatrix[1][1].getText().toString()) &&
+				mButtonMatrix[0][0].getText().toString().equals(mButtonMatrix[2][2].getText().toString()) &&
+				!mButtonMatrix[0][0].getText().toString().equals("")) {			
+			mWinningCharacter = mButtonMatrix[0][0].getText().toString();
+			Log.i(TAG, "Win - "+ mWinningCharacter);
 			return true;
-		} else if (buttonMatrix[2][0].getText().toString().equals(buttonMatrix[1][1].getText().toString()) &&
-				buttonMatrix[2][0].getText().toString().equals(buttonMatrix[0][2].getText().toString()) &&
-				!buttonMatrix[2][0].getText().toString().equals("")) {
-			winningCharacter = buttonMatrix[2][0].getText().toString();
-			Log.i(TAG, "Win - "+ winningCharacter);
+		} else if (mButtonMatrix[2][0].getText().toString().equals(mButtonMatrix[1][1].getText().toString()) &&
+				mButtonMatrix[2][0].getText().toString().equals(mButtonMatrix[0][2].getText().toString()) &&
+				!mButtonMatrix[2][0].getText().toString().equals("")) {
+			mWinningCharacter = mButtonMatrix[2][0].getText().toString();
+			Log.i(TAG, "Win - "+ mWinningCharacter);
 			return true;
 		}		
 		return false;
 	}
 	
 	private void handleGameOver() {
-		gameOver = true;
+		mGameOver = true;
 		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
 		String username = prefs.getString("Username", "Player 1");
 		
-		if (winningCharacter.equals("")) {			
+		if (mWinningCharacter.equals("")) {			
 			//save tie
-			lblInfo.setText("You've tied!");
-		} else if (winningCharacter.equals(playersCharacter)) {
+			mLblInfo.setText("You've tied!");
+		} else if (mWinningCharacter.equals(mPlayersCharacter)) {
 			//save player win
-			lblInfo.setText("You WIN!");
+			mLblInfo.setText("You WIN!");
 		} else {
 			//save player loss
-			lblInfo.setText("You LOSE!");
+			mLblInfo.setText("You LOSE!");
 		}
 	}
 	
@@ -298,14 +297,14 @@ public class PlayFragment extends Fragment {
 	           //vertical lines
 	           for (int i = 0; i < 2; i++) {                  	                      
 	               paint.setColor(Color.BLACK);	               
-	               canvas.drawLine(xpos +(xpos*i), 0, xpos +(xpos*i), height, paint);                           
+	               canvas.drawLine(mXPos +(mXPos*i), 0, mXPos +(mXPos*i), mHeight, paint);                           
 	           }             
 	           //horizontal lines
 	            paint.setStyle(Style.STROKE);
 	               for (int i = 1; i < 3; i++) {
-	            	   pass++;
+	            	   mPass++;
 	                   paint.setColor(Color.BLACK);
-	                   canvas.drawLine(0, (ypos*pass)+ 5, width, (ypos*pass)+5, paint);      
+	                   canvas.drawLine(0, (mYPos*mPass)+ 5, mWidth, (mYPos*mPass)+5, paint);      
 	               }               
 	       }
 	}

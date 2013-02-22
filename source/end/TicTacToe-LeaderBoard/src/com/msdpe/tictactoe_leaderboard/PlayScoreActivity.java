@@ -26,14 +26,14 @@ public class PlayScoreActivity extends FragmentActivity implements
 	 * current dropdown position.
 	 */
 	private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
-	private boolean shouldSkipReload = false;
+	private boolean mShouldSkipReload = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_play_score);
 		if (savedInstanceState != null && savedInstanceState.containsKey("shouldSkipReload"))
-			shouldSkipReload = savedInstanceState.getBoolean("shouldSkipReload");
+			mShouldSkipReload = savedInstanceState.getBoolean("shouldSkipReload");
 		
 		// Set up the action bar to show a dropdown list.
 		final ActionBar actionBar = getActionBar();
@@ -82,7 +82,7 @@ public class PlayScoreActivity extends FragmentActivity implements
 				.getSelectedNavigationIndex());
 		//Save the fragment as well
 		super.onSaveInstanceState(outState);
-		outState.putBoolean("shouldSkipReload", this.shouldSkipReload);		
+		outState.putBoolean("shouldSkipReload", this.mShouldSkipReload);		
 	}
 
 	@Override
@@ -96,13 +96,11 @@ public class PlayScoreActivity extends FragmentActivity implements
 	public boolean onNavigationItemSelected(int position, long id) {
 		// When the given dropdown item is selected, show its contents in the
 		// container view.
-		if (shouldSkipReload) {
-			shouldSkipReload = false;
+		if (mShouldSkipReload) {
+			mShouldSkipReload = false;
 			return true;
 		}
-		Fragment fragment;//
-		
-		
+		Fragment fragment;		
 		
 		if (position == 0) {
 			Log.w("PlayScoreActivity", "PLAYPLAYPLAY");
@@ -118,6 +116,6 @@ public class PlayScoreActivity extends FragmentActivity implements
 	}
 
 	public void setCancelReload(boolean shouldSkipReload) {
-		this.shouldSkipReload= shouldSkipReload;
+		this.mShouldSkipReload= shouldSkipReload;
 	}
 }

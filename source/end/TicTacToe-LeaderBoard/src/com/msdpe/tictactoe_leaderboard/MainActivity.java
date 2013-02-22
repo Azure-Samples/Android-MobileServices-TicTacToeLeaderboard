@@ -14,36 +14,35 @@ import android.widget.EditText;
 
 public class MainActivity extends Activity {
 	
-	private Button btnPlay;
-	private EditText txtName;
+	private Button mBtnPlay;
+	private EditText mTxtName;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		btnPlay = (Button) findViewById(R.id.btnPlay);
-		txtName = (EditText) findViewById(R.id.txtName);
-		btnPlay.setOnClickListener(new OnClickListener() {
+		mBtnPlay = (Button) findViewById(R.id.btnPlay);
+		mTxtName = (EditText) findViewById(R.id.txtName);
+		mBtnPlay.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				//Validate the player's name
-				if (txtName.getText().toString().matches("")) {
-					txtName.setError("Please enter a name");
+				if (mTxtName.getText().toString().matches("")) {
+					mTxtName.setError("Please enter a name");
 					return;
 				} else {
-					txtName.setError(null);
+					mTxtName.setError(null);
 					
 					//Save player's name to preferences
 					SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 					SharedPreferences.Editor prefsEditor = prefs.edit();
-					prefsEditor.putString("Username", txtName.getText().toString());
+					prefsEditor.putString("Username", mTxtName.getText().toString());
 					prefsEditor.commit();
-					
+					//Start the play activity
 					Intent intent = new Intent(getApplicationContext(), PlayScoreActivity.class);
 			        startActivity(intent);
-					
 				}
 			}
 		});

@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 public class ScoreboardFragment extends Fragment {
 	
-	private ListView lvLeaderboard;
+	private ListView mLvLeaderboard;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -24,16 +24,16 @@ public class ScoreboardFragment extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		
-		lvLeaderboard = (ListView) this.getView().findViewById(R.id.lvLeaderboard);
+		mLvLeaderboard = (ListView) this.getView().findViewById(R.id.lvLeaderboard);
 		View headerView = this.getActivity().getLayoutInflater().inflate(R.layout.leaderboard_header, null);
-		lvLeaderboard.addHeaderView(headerView);
+		mLvLeaderboard.addHeaderView(headerView);
 		
 		//Static array of names for now
 		String[] names = new String[] { "Player One", "Player 2", "Player 3", "Player 4",
 		        "Player 5", "Player 6", "Player 7", "Player 8", "Player 9", "Player 10",
 		        "Player 11", "Player 12", "Player 13", "Player 14", "Player 15", "Player 16" };
 		
-		lvLeaderboard.setAdapter(new ArrayAdapter<String>(this.getActivity(),
+		mLvLeaderboard.setAdapter(new ArrayAdapter<String>(this.getActivity(),
 		        android.R.layout.simple_list_item_single_choice,
 		        android.R.id.text1, names));
 		

@@ -6,9 +6,7 @@ public class TicTacToeApplication extends Application {
 	
 	private TicTacToeService mTicTacToeService;
 	
-	public TicTacToeApplication() {
-		
-	}
+	public TicTacToeApplication() {}
 	
 	public TicTacToeService getTicTacToeService() {
 		if (mTicTacToeService == null) {

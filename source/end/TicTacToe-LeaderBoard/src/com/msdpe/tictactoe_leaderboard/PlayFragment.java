@@ -45,7 +45,7 @@ public class PlayFragment extends Fragment {
 	private String playersCharacter = "";
 	private String winningCharacter = "";
 	private String currentCharacter = "X";
-	private int spotsRemaining = 9;	
+	private int mSpotsRemaining = 9;	
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -70,7 +70,7 @@ public class PlayFragment extends Fragment {
 			playersCharacter = savedInstanceState.getString("playersCharacter");
 			gameOver = savedInstanceState.getBoolean("gameOver");
 			currentCharacter = savedInstanceState.getString("currentCharacter");
-			spotsRemaining = savedInstanceState.getInt("spotsRemaining");
+			mSpotsRemaining = savedInstanceState.getInt("spotsRemaining");
 			winningCharacter = savedInstanceState.getString("winningCharacter");
 		}
 				
@@ -137,6 +137,9 @@ public class PlayFragment extends Fragment {
 		}
 	}	
 	
+	/***
+	 * Saves all of our local variables in case of orientation change
+	 */
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		Log.i(TAG, "onSaveInstanceState");	
@@ -147,33 +150,39 @@ public class PlayFragment extends Fragment {
 		}
 		super.onSaveInstanceState(outState);
 		PlayScoreActivity psa = (PlayScoreActivity) getActivity();
-		psa.setCancelReload(true);
-		
+		psa.setCancelReload(true);		
 		outState.putBoolean("playersTurn", playersTurn);
 		outState.putBoolean("computersTurn", computersTurn);
 		outState.putString("playersCharacter", playersCharacter);
 		outState.putBoolean("gameOver", gameOver);
 		outState.putString("currentCharacter", currentCharacter);
-		outState.putInt("spotsRemaining", spotsRemaining);
+		outState.putInt("spotsRemaining", mSpotsRemaining);
 		outState.putString("winningCharacter", winningCharacter);
 	}
 	
+	/***
+	 * Selects a spot for the computer to play.  Dumb AI
+	 */
 	private void playComputersTurn() {
 		for (int i = 2; i >= 0; i--) {
 			for (int j = 2; j >= 0; j--) {
 				if (buttonMatrix[i][j].getText().toString().equals("")) {
 					this.computerPicksSpot(buttonMatrix[i][j]);
-					return;//
+					return;
 				}
 			}
 		}
 	}
 	
+	/***
+	 * Process computer picking a spot
+	 * @param pickedButton
+	 */
 	private void computerPicksSpot(Button pickedButton) {
 		pickedButton.setText(currentCharacter);		
-		spotsRemaining--;
+		mSpotsRemaining--;
 		
-		if (isGameOver() || spotsRemaining == 0) {
+		if (isGameOver() || mSpotsRemaining == 0) {
 			handleGameOver();
 			return;
 		}
@@ -182,6 +191,9 @@ public class PlayFragment extends Fragment {
 		lblInfo.setText(getActivity().getString(R.string.your_turn));
 	}
 
+	/***
+	 * Switch players turn 
+	 */
 	private void switchCurrentCharacterAndTurn() {
 		if (currentCharacter.equals("X")) {
 			currentCharacter = "O";
@@ -192,6 +204,9 @@ public class PlayFragment extends Fragment {
 		computersTurn = !computersTurn;
 	}
 	
+	/***
+	 * Debugging method to print the current board out to the UI
+	 */
 	private void printBoard() {
 		String board = "";
 		for (int i = 0; i < 3; i++) {
@@ -205,15 +220,19 @@ public class PlayFragment extends Fragment {
 		Log.e(TAG, "Board----" + board);
 	}
 	
+	/***
+	 * Handle player making a move
+	 * @param tappedButton
+	 */
 	private void processPlayerButtonTap(Button tappedButton) {
 		Log.e(TAG, "Player tapped - " + tappedButton.getTag());
 		
 		if (!gameOver && playersTurn) {
 			if (tappedButton.getText().toString().equals("")) {
 				tappedButton.setText(currentCharacter);
-				spotsRemaining--;
+				mSpotsRemaining--;
 				
-				if (isGameOver() || spotsRemaining == 0) {
+				if (isGameOver() || mSpotsRemaining == 0) {
 					handleGameOver();
 					return;
 				}
@@ -226,9 +245,13 @@ public class PlayFragment extends Fragment {
 		}
 	}
 	
+	/***
+	 * Check to see if the game is over
+	 * @return
+	 */
 	private boolean isGameOver() {
 		//At least 5 spots must be filled to win a game
-		if (spotsRemaining > 4)
+		if (mSpotsRemaining > 4)
 			return false;
 		
 		printBoard();
@@ -265,6 +288,9 @@ public class PlayFragment extends Fragment {
 		return false;
 	}
 	
+	/***
+	 * Handle the game ending
+	 */
 	private void handleGameOver() {
 		gameOver = true;
 		
@@ -292,6 +318,7 @@ public class PlayFragment extends Fragment {
 			
 		}
 		
+		//This does the insert to Mobile Services
 		tttService.insertPlayerRecord(newPR, new TableOperationCallback<PlayerRecord>() {				
 			@Override
 			public void onCompleted(PlayerRecord entity, Exception exception,
@@ -310,11 +337,15 @@ public class PlayFragment extends Fragment {
 		});
 	}
 	
+	/***
+	 * This class draws the tic tac toe board
+	 * @author chrisner
+	 *
+	 */
 	private class BoardView extends View {
 	       public BoardView(Context context) {
 	           super(context);	           	           
-	       }
-	     
+	       }	     
 	       @Override
 	       protected void onDraw(Canvas canvas) {
 	           super.onDraw(canvas);
@@ -344,5 +375,4 @@ public class PlayFragment extends Fragment {
 	               }               
 	       }
 	}
-	
 }

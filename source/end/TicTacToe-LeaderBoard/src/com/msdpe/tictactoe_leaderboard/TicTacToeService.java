@@ -1,10 +1,7 @@
 package com.msdpe.tictactoe_leaderboard;
 
-import static com.microsoft.windowsazure.mobileservices.MobileServiceQueryOperations.val;
-
 import java.net.MalformedURLException;
 
-import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
@@ -14,13 +11,13 @@ public class TicTacToeService {
 	private MobileServiceClient mClient;
 	private MobileServiceTable<PlayerRecord> mPlayerRecordsTable;
 	private Context mContext;
-	private String TAG = "TicTacToeService";
+	private final String TAG = "TicTacToeService";
 	
 	public TicTacToeService(Context context) {
 		mContext = context;
 		
 		try {
-			mClient = new MobileServiceClient("https://tictactoeleaderboard.azure-mobile.net/", "KKxeIhnoUWsHXvySIpykYgKgqgVkla70", mContext);
+			mClient = new MobileServiceClient("https://<YourMobileServiceUrl>.azure-mobile.net/", "<YourApplicationKey>", mContext);
 			mPlayerRecordsTable = mClient.getTable("PlayerRecords", PlayerRecord.class);
 		} catch (MalformedURLException e) {
 			Log.e(TAG, "There was an error creating the Mobile Service. Verify the URL");

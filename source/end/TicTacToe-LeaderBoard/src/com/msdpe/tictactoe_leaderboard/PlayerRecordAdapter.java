@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 public class PlayerRecordAdapter extends ArrayAdapter<PlayerRecord> {
 
-	Context mContext;
+	private Context mContext;
 
 	/**
 	 * Adapter View layout
