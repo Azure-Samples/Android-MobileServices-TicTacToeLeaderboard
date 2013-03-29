@@ -1,4 +1,4 @@
-# Android - Mobile Services - Tic Tac Toe Leaderboard
+﻿# Android - Mobile Services - Tic Tac Toe Leaderboard
 This is an Android leaderboard sample which makes use of Windows Azure Mobile Services for it's data storage.  It will track different player's wins, losses, and ties from playing a game of Tic Tac Toe.  This sample was built using Eclipse, the Android SDK, and the Andorid Mobile Services SDK.  It was built using a minimum SDK version of 8 and a target version of 17.
 
 Below you will find requirements and deployment instructions.
@@ -22,7 +22,7 @@ After creating your Mobile Service in the Windows Azure Portal, you'll need to c
 * /source/scripts/PlayerRecords.read.script
 
 #Client Application Changes
-In order to run the client applicaiton, you'll need to change a few settings in your application.  After importing the project into Eclipse, open TicTacToeService.java file.  In the constructor method, change the <YourMobileServiceUrl> and <YourApplicationKey> to match the values from the Mobile Service you've created.
+In order to run the client applicaiton, you'll need to change a few settings in your application.  After importing the project into Eclipse, open TicTacToeService.java file.  In the constructor method, change the \<YourMobileServiceUrl> and \<YourApplicationKey> to match the values from the Mobile Service you've created.
 
 ## Contact
 
